@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
       Schema = mongoose.Schema;
-const uniqueValidator = require("mongoose-unique-validator")
+const uniqueValidator = require('mongoose-unique-validator')
 const crypto = require("crypto")
 const jwt = require("jsonwebtoken")
 const secret = require("../config").secret;
@@ -16,7 +16,7 @@ const UsuarioSchema = new mongoose.Schema({
         unique: true,
         required:[true, "não pode ficar vazio"],
         index: true,
-        match: [/\S+@\S+\.\S+/, "é inválido"]
+        match: [/\S+@\S+\.\S+/, 'é inválido']
     },
     loja: {
         type: Schema.Types.ObjectId,
@@ -27,8 +27,8 @@ const UsuarioSchema = new mongoose.Schema({
         type: Array,
         default: ["cliente"]
     },
-    hash: {type: String},
-    salt: {type: String},
+    hash: String,
+    salt: String,
     recovery:{
         type:{
             token: String,
@@ -64,7 +64,7 @@ UsuarioSchema.methods.gerarToken = function(){
 
 UsuarioSchema.methods.enviarAuthJSON = function(){
     return {
-         
+        
         nome: this.nome,
         email: this.email,
         loja: this.loja,

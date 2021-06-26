@@ -24,6 +24,7 @@ app.use("/public/images", express.static(__dirname + "/public/images"))
 const dbs = require("./config/database")
 const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
 mongoose.connect(dbURI, {useNewUrlParser: true})
+//mongoose.connect(mongoConnectionString, {useNewUrlParser: true, useCreateIndex: true,});
 
 //SETUP EJS
 app.set("view engine", "ejs")
@@ -55,7 +56,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next)=>{
     res.status(err.status || 500)
     if(err.status !== 404) console.warn("Error: ", err.message, new Date())
-    res.json({errors: { message: err.message, status: err.status}})
+    res.json(err)
 })
 
 //ESCUTAR
