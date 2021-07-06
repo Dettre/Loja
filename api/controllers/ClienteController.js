@@ -1,18 +1,16 @@
 const mongoose = require("mongoose");
 
-//const Pedido = mongoose.model("Pedido");
-//const Produto = mongoose.model("Produto");
-//const Variacao = mongoose.model("Variacao");
+const Pedido = mongoose.model("Pedido");
+const Produto = mongoose.model("Produto");
+const Variacao = mongoose.model("Variacao");
 
 const Cliente = mongoose.model("Cliente");
 const Usuario = mongoose.model("Usuario");
 
 class ClienteController {
 
-    /**
-     * 
-     * ADMIN
-     */
+    // ADMIN
+     
 
     // GET / index
     async index(req,res,next){
@@ -30,10 +28,9 @@ class ClienteController {
     }
     
     // GET /search/:search/pedidos
-        searchPedidos(req,res,next){
-         return res.statut(400).send({ error: "Em desenvolvimento" });
+       async searchPedidos(req,res,next){
 
-     /*   const { offset, limit, loja } = req.query;
+        const { offset, limit, loja } = req.query;
         try {
             const search = new RegExp(req.params.search, "i");
             const clientes = await Cliente.find({ loja, $text: { $search: search, $diacriticSensitive: false } });
@@ -52,7 +49,7 @@ class ClienteController {
             return res.send({ pedidos });
         } catch(e){
             next(e);
-        }*/
+        }
     }
 
     // GET /search/:search
@@ -62,13 +59,13 @@ class ClienteController {
         const search = new RegExp(req.params.search, "i");
         try {
             const clientes = await Cliente.paginate(
-                { 
-                    loja: req.query.loja, 
-                    $or: [
+                {  loja: req.query.loja, nome: {$regex: search}},
+                   
+              /*      $or: [
                         { $text: { $search: search, $diacriticSensitive: false } },
                         { telefones: { $regex: search } }
                     ]
-                }, 
+                }, */
                 { offset, limit, populate: { path:"usuario", select: "-salt -hash" } }
             );
             return res.send({ clientes });
@@ -88,9 +85,8 @@ class ClienteController {
     }
 
     // GET /admin/:id/pedidos
-    showPedidosCliente(req,res,next){
-         return res.status(400).send({ error: "Em desenvolvimento" });
-    /*   const { offset, limit, loja } = req.query;
+   async showPedidosCliente(req,res,next){
+       const { offset, limit, loja } = req.query;
         try {
             const pedidos = await Pedido.paginate(
                 { loja, cliente: req.params.id }, 
@@ -111,7 +107,7 @@ class ClienteController {
             return res.send({ pedidos });
         } catch(e){
             next(e);
-        }*/
+        }
     }
 
     // PUT /admin/:id
@@ -193,7 +189,7 @@ class ClienteController {
             if(telefones) cliente.telefones = telefones;
             if(endereco) cliente.endereco = endereco;
             if(dataDeNascimento) cliente.dataDeNascimento = dataDeNascimento;
-           // await cliente.usuario.save();
+            await cliente.usuario.save();
             await cliente.save();
             cliente.usuario = {
                 email: cliente.usuario.email,

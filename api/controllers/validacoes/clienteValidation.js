@@ -9,7 +9,7 @@ const ClienteValidation = {
             limit: Joi.number()
         }
     },
-   /* searchPedidos: {
+    searchPedidos: {
         query: {
             offset: Joi.number(),
             limit: Joi.number()
@@ -17,7 +17,7 @@ const ClienteValidation = {
         params: {
             search: Joi.string().required()
         }
-    },*/
+    },
     search: {
         query: {
             offset: Joi.number(),
@@ -32,7 +32,7 @@ const ClienteValidation = {
             id: Joi.string().alphanum().length(24).required()
         }
     },
-   /* showPedidosCliente: {
+    showPedidosCliente: {
         query: {
             offset: Joi.number(),
             limit: Joi.number()
@@ -40,7 +40,7 @@ const ClienteValidation = {
         params: {
             id: Joi.string().alphanum().length(24).required()
         }
-    },*/
+    },
     updateAdmin:{
         params: {
             id: Joi.string().alphanum().length(24).required()

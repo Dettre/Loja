@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Categoria = mongoose.model("Categoria");
-//const Produto = mongoose.model("Produto");
+const Produto = mongoose.model("Produto");
 
 class CategoriaController {
 
@@ -73,7 +73,7 @@ class CategoriaController {
 
     /**
      * PRODUTOS
-     
+     */
     // GET /:id/produtos - showProdutos
     async showProdutos(req,res,next){
         const { offset, limit } = req.query;
@@ -118,7 +118,7 @@ class CategoriaController {
             next(e);
         }
     }
-  */
+  
 }
 
 module.exports = CategoriaController;
