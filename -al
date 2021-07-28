@@ -1,0 +1,344 @@
+[33mcommit aa40d25d8e7c64f3e8f80b0ae6a02b95a34bd5e1[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Dirley Dettre <odirlei21@hotmail.com>
+Date:   Wed Jun 23 03:37:33 2021 -0300
+
+    primeiro commit
+
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..167ab9f[m
+[1m--- /dev/null[m
+[1m+++ b/.gitignore[m
+[36m@@ -0,0 +1,2 @@[m
+[32m+[m[32mnode_modules/[m
+[32m+[m[32myarn.lock[m
+\ No newline at end of file[m
+[1mdiff --git a/.jshintrc b/.jshintrc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8ab3485[m
+[1m--- /dev/null[m
+[1m+++ b/.jshintrc[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m    "esversion": 6[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/api/config/database.json b/api/config/database.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8d5a9d9[m
+[1m--- /dev/null[m
+[1m+++ b/api/config/database.json[m
+[36m@@ -0,0 +1,5 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m    "dbTest": "mongodb://localhost:27017/ecommerce-api-teste",[m
+[32m+[m[32m    "dbProduction": "mongodb://localhost:27017/ecommerce-api"[m
+[32m+[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/api/config/email.js b/api/config/email.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..822f478[m
+[1m--- /dev/null[m
+[1m+++ b/api/config/email.js[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32mmodule.exports = {[m
+[32m+[m[32m    host: "smtp.gmail.com",[m
+[32m+[m[32m    port: 465,[m
+[32m+[m[32m    auth: {[m
+[32m+[m[32m        user: "dettredirley@gmail.com",[m
+[32m+[m[32m        pass: "006085578"[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/api/config/index.js b/api/config/index.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..05e80d0[m
+[1m--- /dev/null[m
+[1m+++ b/api/config/index.js[m
+[36m@@ -0,0 +1,5 @@[m
+[32m+[m[32mmodule.exports = {[m
+[32m+[m[32m    secret: process.env.NODE_ENV === "production" ? process.env.SECRET : "DSVSVVSDSDVDVD125F4F5D4F5DF45D4F54FD5",[m
+[32m+[m[32m    api: process.env.NODE_ENV === "production" ? "https://api.loja-teste.ampliee.com" : "http://localhost:3000",[m
+[32m+[m[32m    loja: process.env.NODE_ENV === "production" ? "https://loja-teste.ampliee.com" : "http://localhost:8000"[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/api/config/multer.js b/api/config/multer.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f7925bd[m
+[1m--- /dev/null[m
+[1m+++ b/api/config/multer.js[m
+[36m@@ -0,0 +1,10 @@[m
+[32m+[m[32mconst multer = require("multer")[m
+[32m+[m
+[32m+[m[32mconst storage = multer.diskStorage({[m
+[32m+[m[32m    destination: (req, file, callback)=> callback(null, __dirname + '/../public/images'),[m
+[32m+[m[32m    filename: (req, file, callback)=> callback(null, file.fieldname + '-' + Date.now() + '.jpg')[m
+[32m+[m[32m})[m
+[32m+[m
+[32m+[m[32mconst upload = multer({ storage})[m
+[32m+[m
+[32m+[m[32mmodule.exports = upload[m
+\ No newline at end of file[m
+[1mdiff --git a/api/controllers/UsuarioController.js b/api/controllers/UsuarioController.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4d2d6c9[m
+[1m--- /dev/null[m
+[1m+++ b/api/controllers/UsuarioController.js[m
+[36m@@ -0,0 +1,140 @@[m
+[32m+[m[32mconst mongoose = require("mongoose")[m
+[32m+[m[32mconst Usuario = mongoose.model("Usuario")[m
+[32m+[m[32mconst enviarEmailRecovery = require("../helpers/email-recovery")[m
+[32m+[m
+[32m+[m[32mclass UsuarioController {[m
+[32m+[m
+[32m+[m[32m    // GET[m
+[32m+[m[32m    index(req, res, next){[m
+[32m+[m[32m        Usuario.findById(req.payload.id).then(usuario=> {[m
+[32m+[m[32m            if(!usuario) return res.status(401).json({errors: "Usuario não registrado"})[m
+[32m+[m[32m            return res.json({usuario: usuario.enviarAuthJSON()})[m
+[32m+[m[32m        }).catch(next);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //GET /:id[m
+[32m+[m[32m    show(req, res, next){[m
+[32m+[m[32m        Usuario.findById(req,params.id).populate({ path: "loja"})[m
+[32m+[m[32m        .then(usuario => {[m
+[32m+[m[32m        if(!usuario) return res.status(401).json({errors: "Usuario não registrado"})[m[41m   [m
+[32m+[m[32m            return res.json({[m
+[32m+[m[32m                usuario: {[m
+[32m+[m[32m                    nome: usuario.nome,[m
+[32m+[m[32m                    email: usuario.email,[m
+[32m+[m[32m                    permissao: usuario.permissao,[m
+[32m+[m[32m                    loja: usuario.loja[m
+[32m+[m[32m                }[m
+[32m+[m[32m            })[m
+[32m+[m[32m        }).catch(next)[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // POST /registrar[m
+[32m+[m
+[32m+[m[32m    store(req, res, next){[m
+[32m+[m[32m        const {nome, email, password, loja} = req.body;[m
+[32m+[m
+[32m+[m[32m       if(!nome || !email || !password || !loja) return res.status(422).json({errors: "Preencha todos os campos de cadastro"})[m
+[32m+[m
+[32m+[m[32m        const usuario = new Usuario({nome, email, loja})[m
+[32m+[m[32m        usuario.setSenha(password);[m
+[32m+[m
+[32m+[m[32m        usuario.save()[m
+[32m+[m[32m        .then(()=> res.json({usuario: usuario.enviarAuthJSON()}))[m
+[32m+[m[32m        .catch((err)=>{[m
+[32m+[m[32m            console.log(err)[m
+[32m+[m[32m            next(err)[m
+[32m+[m[32m        })[m
+[32m+[m[41m        [m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //PUT[m
+[32m+[m[32m    update(req, res, next){[m
+[32m+[m[32m        const {nome, email, password} = req.body;[m
+[32m+[m[32m        Usuario.findById(req.payload.id).then((usuario)=>{[m
+[32m+[m[32m        if(!usuario) return res.status(401).json({errors: "Usuario não registrado"})[m[41m     [m
+[32m+[m[32m        if(!typeof nome !== "undefined") usuario.nome = nome[m
+[32m+[m[32m        if(!typeof email !== "undefined") usuario.email = email[m
+[32m+[m[32m        if(!typeof password !== "undefined") usuario.setSenha(password)[m[41m  [m
+[32m+[m[32m            return usuario.save().then(()=>{[m
+[32m+[m[32m                return res.json({usuario: usuario.enviarAuthJSON()})[m
+[32m+[m[32m            }).catch(next)[m[41m    [m
+[32m+[m[32m    }).catch(next)[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //DELETE[m
+[32m+[m[32m    remove(req, res, next){[m
+[32m+[m[32m        Usuario.findById(req.payload.id).then((usuario)=>{[m
+[32m+[m[32m        if(!usuario) return res.status(401).json({errors: "Usuario não registrado"})[m[41m       [m
+[32m+[m[32m            return usuario.remove().then(()=>{[m
+[32m+[m[32m                return res.json({ deletado: true})[m
+[32m+[m[32m            }).catch(next)[m
+[32m+[m[32m    }).catch(next)[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // POST /LOGIN[m
+[32m+[m[32m    login(req, res, next){[m
+[32m+[m[32m        const {email, password} = req.body;[m
+[32m+[m[32m        if(!email) return res.status(422).json({ errors: { email: "Não pode ficar vazio"}})[m
+[32m+[m[32m        if(!password) return res.status(422).json({ errors: { password: "Não pode ficar vazio"}})[m
+[32m+[m[32m        Usuario.findOne({email}).then((usuario)=>{[m
+[32m+[m[32m         if(!usuario) return res.status(401).json({errors: "Usuario não registrado"})[m[41m     [m
+[32m+[m[32m         if(!usuario.validarSenha(password)) return res.status(401).json({errors: "Senha inválida"})[m
+[32m+[m[32m            return res.json({ usuario: usuario.enviarAuthJSON()})[m
+[32m+[m[32m        }).catch(next)[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // RECOVERY[m
+[32m+[m[32m    //GET /recuperar-senha[m
+[32m+[m[32m    showRecovery(req, res, next){[m
+[32m+[m[32m        console.log("call")[m
+[32m+[m[32m        return res.render('recovery', {error: null, success:null})[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // POST /recuperar-senha[m
+[32m+[m[32m    createRecovery(req, res, next){[m
+[32m+[m[32m        const {email} = req.body;[m
+[32m+[m[32m        if(!email) return res.render('recovery',{error: "Preencha com o seu email", success: null})[m
+[32m+[m
+[32m+[m[32m        Usuario.findOne({email}).then((usuario)=>{[m
+[32m+[m[32m            if(!usuario) return res.render("recovery", {error: "Não existe usuário com esse email", success: null})[m
+[32m+[m[32m            const recoveryData = usuario.criarTokenRecuperacaoSenha();[m
+[32m+[m[32m            return usuario.save().then(()=>{[m
+[32m+[m[32m               enviarEmailRecovery({usuario, recovery: recoveryData}, (error = null, success = null))[m
+[32m+[m[32m           return res.render("recovery", {error, success})[m
+[32m+[m[32m            }).catch(next)[m
+[32m+[m[32m        }).catch(next)[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //GET /Senha-recuperada[m[41m [m
+[32m+[m[32m    showCompleteRecovery(req, res, next){[m
+[32m+[m[32m        if(!req.query.token) return res.render("recovery", {error:" Token não identificado" , success: null})[m
+[32m+[m[32m        Usuario.findOne({"recovery.token": req.query.token}).then(usuario => {[m
+[32m+[m[32m            if(!usuario) return res.render("recovery", {error: "Não existe usuario com este token", success:null})[m
+[32m+[m[32m            if(new Date(usuario.recovery.date) < new Date()) return res.render("recovery", {error: "Token expirado. Tente Novamente", success: null});[m
+[32m+[m[32m            return res.render("recovery/store", {error: null, success: null, token: req.query.token});[m
+[32m+[m[32m        }).catch(next);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //POST /senha-recuperada[m
+[32m+[m
+[32m+[m[32m    completeRecovery(req, res, next){[m
+[32m+[m[32m        const {token, password} = req.body;[m
+[32m+[m[32m        if(!token || !password) return res.render("recovery/store", {error: "preencha novamente com sua nova senha", success: null, token: token});[m
+[32m+[m[32m        Usuario.findOne({"recovery.token": token}).then(usuario => {[m
+[32m+[m[32m            if(!usuario) return res.render("recovery", {error: "Usuario não identificado", success: null});[m
+[32m+[m
+[32m+[m[32m            usuario.finalizarTokenRecuperacaoSenha()[m
+[32m+[m[32m            usuario.setSenha(password)[m
+[32m+[m[32m            return usuario.save().then(()=>{[m
+[32m+[m[32m                return res.render("recovery/store", {[m
+[32m+[m[32m                    error: null,[m
+[32m+[m[32m                    success: "Senha alterada com sucesso. Tente novamente fazer login.",[m
+[32m+[m[32m                    token: null[m
+[32m+[m[32m                })[m
+[32m+[m[32m            }).catch(next)[m
+[32m+[m[32m        })[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mmodule.exports = UsuarioController;[m
+\ No newline at end of file[m
+[1mdiff --git a/api/helpers/email-recovery.js b/api/helpers/email-recovery.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..038086b[m
+[1m--- /dev/null[m
+[1m+++ b/api/helpers/email-recovery.js[m
+[36m@@ -0,0 +1,43 @@[m
+[32m+[m[32mconst transporter = require("nodemailer").createTransport(require("../config/email"))[m
+[32m+[m[32mconst { root: link } = require("../config/index")[m
+[32m+[m
+[32m+[m[32mmodule.exports = ({ usuario, recovery}, cb)=>{[m
+[32m+[m[32m    const message =`[m
+[32m+[m[32m    <h1 style="text-align: center;"> Recuperação de Senha</h1>[m
+[32m+[m[32m    <br/>[m
+[32m+[m[32m    <p>[m
+[32m+[m[32m            Aqui está o link para recuperação de senha. Acesse-o e digite sua nova senha:[m
+[32m+[m[32m       </p>[m
+[32m+[m[32m       <a href="${link}/v1/api/usuarios/senha-recuperada?token=${recovery.token}">[m
+[32m+[m[32m       ${link}/v1/api/usuarios/senha-recuperada?token=${recovery.token}[m
+[32m+[m[32m        </a>[m
+[32m+[m[32m        <br /> <br /> <hr />[m
+[32m+[m[32m        <p>[m
+[32m+[m[32m            Obs.: Se você não solicitou a redefinição. apenas ignore esse e-mail.[m
+[32m+[m[32m        <p />[m
+[32m+[m[32m        <br />[m
+[32m+[m[32m        <p> Atenciosamente, Loja TI <p />[m
+[32m+[m
+[32m+[m[32m       `;[m
+[32m+[m[32m       const opcoesEmail = {[m
+[32m+[m[32m           from: "naoresponder@lojati.com",[m
+[32m+[m[32m           to: usuario.email,[m
+[32m+[m[32m           subject: "Redefinição de Senha - Loja TI",[m
+[32m+[m[32m           html: message[m
+[32m+[m[32m       };[m
+[32m+[m
+[32m+[m[32m       if( process.env.NODE_ENV === "production"){[m
+[32m+[m[32m        transporter.sendMail(opcoesEmail, (error, info)=>{[m
+[32m+[m[32m            if(error){[m
+[32m+[m[32m                console.log(error);[m
+[32m+[m[32m                return cb("Aconteceu um erro no envio do email, tente novamente")[m
+[32m+[m
+[32m+[m[32m            }else{[m
+[32m+[m[32m                return cb(null, "Link para redefinição de senha foi enviado com sucesso para seu e-mail")[m
+[32m+[m[32m            }[m
+[32m+[m[32m        })[m
+[32m+[m[32m       }else{[m
+[32m+[m[32m           console.log(opcoesEmail)[m
+[32m+[m[32m           return cb(null, "Link para redefinição de senha foi enviado com sucesso para seu e-mail")[m
+[32m+[m[32m       }[m
+[32m+[m[32m};[m
+\ No newline at end of file[m
+[1mdiff --git a/api/models/index.js b/api/models/index.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..32ecf6c[m
+[1m--- /dev/null[m
+[1m+++ b/api/models/index.js[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32mrequire("./usuario")[m
+\ No newline at end of file[m
+[1mdiff --git a/api/models/usuario.js b/api/models/usuario.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e412408[m
+[1m--- /dev/null[m
+[1m+++ b/api/models/usuario.js[m
+[36m@@ -0,0 +1,90 @@[m
+[32m+[m[32mconst mongoose = require("mongoose")[m
+[32m+[m[32m      Schema = mongoose.Schema;[m
+[32m+[m[32mconst uniqueValidator = require("mongoose-unique-validator")[m
+[32m+[m[32mconst crypto = require("crypto")[m
+[32m+[m[32mconst jwt = require("jsonwebtoken")[m
+[32m+[m[32mconst secret = require("../config").secret;[m
+[32m+[m
+[32m+[m[32mconst UsuarioSchema = new mongoose.Schema({[m
+[32m+[m[32m    nome: {[m
+[32m+[m[32m        type: String,[m
+[32m+[m[32m        required:[true, "não pode ficar vazio"][m
+[32m+[m[32m    },[m
+[32m+[m[32m    email: {[m
+[32m+[m[32m        type: String,[m
+[32m+[m[32m        lowercase: true,[m
+[32m+[m[32m        unique: true,[m
+[32m+[m[32m        required:[true, "não pode ficar vazio"],[m
+[32m+[m[32m        index: true,[m
+[32m+[m[32m        match: [/\S+@\S+\.\S+/, "é inválido"][m
+[32m+[m[32m    },[m
+[32m+[m[32m    loja: {[m
+[32m+[m[32m        type: Schema.Types.ObjectId,[m
+[32m+[m[32m        ref: "Loja",[m
+[32m+[m[32m        required:[true, "não pode ficar vazio"][m
+[32m+[m[32m    },[m
+[32m+[m[32m    permissao: {[m
+[32m+[m[32m        type: Array,[m
+[32m+[m[32m        default: ["cliente"][m
+[32m+[m[32m    },[m
+[32m+[m[32m    hash: {type: String},[m
+[32m+[m[32m    salt: {type: String},[m
+[32m+[m[32m    recovery:{[m
+[32m+[m[32m        type:{[m
+[32m+[m[32m            token: String,[m
+[32m+[m[32m            date: Date[m
+[32m+[m[32m        },[m
+[32m+[m[32m        default:{}[m
+[32m+[m[32m    }[m
+[32m+[m[32m},{timestamps: true})[m
+[32m+[m
+[32m+[m[32mUsuarioSchema.plugin(uniqueValidator, {message: "já está sendo utilizado"})[m
+[32m+[m
+[32m+[m[32mUsuarioSchema.methods.setSenha = function(password){[m
+[32m+[m[32m    this.salt = crypto.randomBytes(16).toString("hex")[m
+[32m+[m[32m    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000,512, "sha512").toString("hex")[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mUsuarioSchema.methods.validarSenha = function(password){[m
+[32m+[m[32m    const hash = crypto.pbkdf2Sync(password, this.salt, 10000,512, "sha512").toString("hex")[m
+[32m+[m[32m    return hash === this.hash;[m
+[32m+[m[32m};[m
+[32m
