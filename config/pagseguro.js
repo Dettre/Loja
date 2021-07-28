@@ -5,4 +5,5 @@ module.exports = {
     email: 'odirlei21@hotmail.com',
     token: '32919D5A8B554755A366AB412DEFF706',
     notificationURL: "https://api.loja-teste.ampliee.com/v1/api/pagamentos/notificacao",
+
 }
