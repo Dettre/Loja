@@ -33,7 +33,7 @@ const calcularFrete = async ({ cep, produtos }) => {
                     nVlAltura: caixa.altura,
                     nVlLargura: caixa.largura,
                     nVlDiamentro: 0,
-                    nVlValorDeclarado: valorFinal < 19.5 ? 19.5 : valorFinal
+                    nVlValorDeclarado: valorFinal < 20.5 ? 20.5 : valorFinal
                 });
                 return { ...resultado[0] };
             })
