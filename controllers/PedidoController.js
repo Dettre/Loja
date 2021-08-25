@@ -117,7 +117,6 @@ class PedidoController {
         const { offset, limit, loja } = req.query;
         try {
             const cliente = await Cliente.findOne({ usuario: req.payload.id });
-            
             const pedidos = await Pedido.paginate(
                 { loja, cliente: cliente._id }, 
                 { 
@@ -173,7 +172,7 @@ class PedidoController {
             if(!await QuantidadeValidation.validarQuantidadeDisponivel(carrinho)) return res.status(400).send({ error: "Produtos não tem quantidade disponivel" });
 
             // CHECAR DADOS DE ENTREGA
-           if(!await EntregaValidation.checarValorPrazo(cliente.endereco.CEP, carrinho, entrega)) return res.status(422).send({ error: "Dados de Entrega Inválidos" });
+            if(!await EntregaValidation.checarValorPrazo(cliente.endereco.CEP, carrinho, entrega)) return res.status(422).send({ error: "Dados de Entrega Inválidos" });
 
             // CHECAR DADOS DO PAGAMENTO
             if(!await PagamentoValidation.checarValorTotal({carrinho, entrega, pagamento})) return res.status(422).send({ error: "Dados de Pagamento Inválidos" });
@@ -222,12 +221,12 @@ class PedidoController {
             });
             await registroPedido.save();
 
-         /*   EmailController.enviarNovoPedido({ pedido, usuario: cliente.usuario });
+            EmailController.enviarNovoPedido({ pedido, usuario: cliente.usuario });
             const administradores = await Usuario.find({ permissao: "admin", loja });
             administradores.forEach((usuario) => {
                 EmailController.enviarNovoPedido({ pedido, usuario });
             });
-*/
+
             return res.send({ pedido: Object.assign({}, pedido._doc, { entrega: novaEntrega, pagamento: novoPagamento, cliente }) });
         }catch(e){
             next(e);

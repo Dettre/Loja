@@ -22,8 +22,6 @@ const calcularFrete = async ({ cep, produtos }) => {
         const resultados = await Promise.all(
             config.nCdServico.split(',').map(async(servico)=>{
                 const resultado = await correios.calcPrecoPrazo({            
-             //     nCdEmpresa: "12345678" CASO TENHA UM CÓDIGO DE EMPRESA
-                //  sDsSenha: "12345678" 
                     nCdServico: servico,
                     sCepOrigem: config.sCepOrigem,
                     sCepDestino: cep,
@@ -33,7 +31,7 @@ const calcularFrete = async ({ cep, produtos }) => {
                     nVlAltura: caixa.altura,
                     nVlLargura: caixa.largura,
                     nVlDiamentro: 0,
-                    nVlValorDeclarado: valorFinal < 20.5 ? 20.5 : valorFinal
+                    nVlValorDeclarado: valorFinal < 19.5 ? 19.5 : valorFinal
                 });
                 return { ...resultado[0] };
             })

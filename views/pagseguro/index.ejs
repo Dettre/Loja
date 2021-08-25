@@ -10,17 +10,23 @@
     <script>
         function main(){
             $.ajax({ url: "/v1/api/pagamentos/session" }).done(function(data){
+
                 var idSessaoPagamento = data.sessionId;
                 console.log("ID da Sessao: ", idSessaoPagamento);
+
                 var hashUser = "";
                 PagSeguroDirectPayment.setSessionId(idSessaoPagamento);
+
                 hashUser = PagSeguroDirectPayment.getSenderHash();
                 console.log("Hash: ", hashUser);
+
                 var tokenc = "";
+
                 var mes = "12";
                 var ano = "2030";
                 var cartao = "4111111111111111";
                 var bin = "411111";
+
                 var brand = "";
                 var param = {
                     cardNumber: cartao,
@@ -35,6 +41,7 @@
                     error: (r) => console.log(r),
                     complete: (r) => console.log(r)
                 };
+
                 PagSeguroDirectPayment.getBrand({
                     cardBin: bin,
                     success: function(response){
@@ -45,6 +52,7 @@
                     error: (r) => console.log(r),
                     complete: (r) => console.log(r)
                 });
+
             });
         }
     </script>

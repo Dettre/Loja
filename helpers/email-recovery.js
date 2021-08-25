@@ -1,4 +1,3 @@
-  
 const transporter = require("nodemailer").createTransport(require("../config/email"));
 const { api: link } = require("../config/index");
 

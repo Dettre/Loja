@@ -118,7 +118,7 @@ class CategoriaController {
             next(e);
         }
     }
-  
+
 }
 
 module.exports = CategoriaController;

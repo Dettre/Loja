@@ -8,7 +8,7 @@ class VariacaoController {
     // GET / - index
     async index(req,res,next){
         const { loja, produto } = req.query;
-      //  console.log(loja, produto)
+        console.log(loja, produto)
         try {
             const variacoes = await Variacao.find({ loja, produto });
             return res.send({ variacoes });
@@ -52,7 +52,7 @@ class VariacaoController {
 
     // PUT /:id - update
     async update(req,res,next){
-        const { codigo, fotos ,   nome, preco, promocao, entrega, quantidade } = req.body;
+        const { codigo, fotos, nome, preco, promocao, entrega, quantidade } = req.body;
         
         const { loja, produto } = req.query;
         const { id: _id } = req.params;
@@ -60,7 +60,7 @@ class VariacaoController {
             
             const variacao = await Variacao.findOne({ loja, produto, _id });
             if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
-            
+
             if( codigo ) variacao.codigo = codigo;
             if( nome ) variacao.nome = nome;
             if( preco ) variacao.preco = preco;
@@ -79,10 +79,9 @@ class VariacaoController {
     // PUT /images/:id - updateImages
     async updateImages(req,res,next){
         const { loja, produto } = req.query;
-       const { id: _id } = req.params;
+        const { id: _id } = req.params;
         try {
-           const variacao = await Variacao.findOne({ loja, produto, _id });
-
+            const variacao = await Variacao.findOne({ loja, produto, _id });
             if(!variacao) return res.status(400).send({ error: "Variação não encontrada" });
 
             const novasImagens = req.files.map(item => item.filename);

@@ -60,9 +60,12 @@ class ClienteController {
         const search = new RegExp(req.params.search, "i");
         try {
             const clientes = await Cliente.paginate(
-                {
-                    loja: req.query.loja,
-                    $text: { $search: search, $diacriticSensitive: false }
+                { 
+                    loja: req.query.loja, 
+                    $or: [
+                        { $text: { $search: search, $diacriticSensitive: false } },
+                        { telefones: { $regex: search } }
+                    ]
                 }, 
                 { offset, limit, populate: { path:"usuario", select: "-salt -hash" } }
             );
