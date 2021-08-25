@@ -47,7 +47,7 @@ class PedidoController {
         }
     }
 
-    // get /admin/:id showAdmin
+    // get/admin/:id showAdmin
     async showAdmin(req,res,next){
         try {
             const pedido = await Pedido
@@ -65,7 +65,7 @@ class PedidoController {
         }
     }
 
-    // delete /admin/:id removeAdmin
+    // delete/admin/:id removeAdmin
     async removeAdmin(req,res,next){
         try {
             const pedido = await Pedido.findOne({ 
@@ -96,7 +96,7 @@ class PedidoController {
         }
     }
 
-    // get /admin/:id/carrinho showCarrinhoPedidoAdmin
+    // get/admin/:id/carrinho showCarrinhoPedidoAdmin
     async showCarrinhoPedidoAdmin(req,res,next){
         try {
             const pedido = await Pedido.findOne({ loja: req.query.loja, _id: req.params.id });
@@ -112,7 +112,7 @@ class PedidoController {
     }
 
     // CLIENTE
-    // get / index
+    // get/index
     async index (req, res, next){
         const { offset, limit, loja } = req.query;
         try {
@@ -139,7 +139,7 @@ class PedidoController {
         }
     }
 
-    // get /:id show
+    // get/:id show
     async show(req,res,next){
         try {
             const cliente = await Cliente.findOne({ usuario: req.payload.id });
@@ -158,7 +158,7 @@ class PedidoController {
         }
     }
 
-    // post / store
+    // post/store
     async store(req,res,next){
         const { carrinho, pagamento, entrega } = req.body;
         const { loja } = req.query;
@@ -233,7 +233,7 @@ class PedidoController {
         }
     }
 
-    // delete /:id remove
+    // delete/:id remove
     async remove(req,res,next){
         try {
             const cliente = await Cliente.findOne({ usuario: req.payload.id });

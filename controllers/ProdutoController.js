@@ -141,7 +141,7 @@ class ProdutoController {
     }
 
     // CLIENTE
-    // GET / - index
+    // GET /index
     async index(req,res,next){
         const offset = Number(req.query.offset) || 0;
         const limit = Number(req.query.limit) || 30;
@@ -156,7 +156,7 @@ class ProdutoController {
         }
     }
 
-    // GET /disponiveis - indexDisponiveis
+    // GET /disponiveis -   indexDisponiveis
     async indexDisponiveis(req,res,next){
         const offset = Number(req.query.offset) || 0;
         const limit = Number(req.query.limit) || 30;
@@ -171,7 +171,7 @@ class ProdutoController {
         }
     }
 
-    // get /search/:search - search
+    // get /search/:search -    search
     async search(req,res,next){
         const offset = Number(req.query.offset) || 0;
         const limit = Number(req.query.limit) || 30;
@@ -207,7 +207,7 @@ class ProdutoController {
 
 
     // AVALIACOES
-    // GET /:id/avaliacoes - showAvaliacoes
+    // GET /:id/avaliacoes -   showAvaliacoes
     async showAvaliacoes(req,res,next){
         try {
             const avaliacoes = await Avaliacao.find({ produto: req.params.id });
@@ -218,7 +218,7 @@ class ProdutoController {
     }
 
     // VARIACOES
-    // GET /:id/variacoes - showVariacoes
+    // GET /:id/variacoes -  showVariacoes
     async showVariacoes(req,res,next){
         try {
             const variacoes = await Variacao.find({ produto: req.params.id });
