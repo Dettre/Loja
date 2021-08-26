@@ -283,4 +283,4 @@ class PedidoController {
 
 }
 
-module.exports = PedidoController;
+module.exports = PedidoController
