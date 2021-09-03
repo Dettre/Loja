@@ -16,13 +16,13 @@ module.exports = ({ usuario, recovery }, cb) => {
             Obs.: Se você não solicitou a redefinicao, apenas ignore esse email.
         </p>
         <br />
-        <p>Atenciosamente, Loja TI</p>
+        <p>Atenciosamente, Moda Brasil</p>
     `;
 
     const opcoesEmail = {
-        from: "naoresponder@lojati.com",
+        from: "dettredirley@gmail.com",
         to: usuario.email,
-        subject: "Redefinicao de Senha - Loja TI",
+        subject: "Redefinicao de Senha - Moda Brasil",
         html: message
     };
 

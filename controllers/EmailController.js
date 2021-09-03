@@ -4,7 +4,7 @@ const moment = require("moment");
 
 const _send = ({ subject, emails, message }, cb = null) => {
     const mailOptions = { 
-        from: "no-response@lojati.com",
+        from: "dettredirley@gmail.com",
         to: emails,
         subject,
         html: message
@@ -34,10 +34,10 @@ const enviarNovoPedido = ({ usuario, pedido }) => {
         <a href="${loja}">Acesse a loja para saber mais.</a>
         <br /><br />
         <p>Atenciosamente,</p>
-        <p>Equipe - Loja TI</p>
+        <p>Equipe - Moda Brasil</p>
     `;
     _send({
-        subject: "Pedido Recebido - Loja TI",
+        subject: "Pedido Recebido - Moda Brasil",
         emails: usuario.email,
         message
     });
@@ -53,10 +53,10 @@ const cancelarPedido = ({ usuario, pedido }) => {
         <a href="${loja}">Acesse a loja para saber mais.</a>
         <br /><br />
         <p>Atenciosamente,</p>
-        <p>Equipe - Loja TI</p>
+        <p>Equipe - Moda Brasil</p>
     `;
     _send({
-        subject: "Pedido Cancelado - Loja TI",
+        subject: "Pedido Cancelado - Moda Brasil",
         emails: usuario.email,
         message
     });
@@ -74,10 +74,10 @@ const atualizarPedido = ({ usuario, pedido, status, data, tipo }) => {
         <a href="${loja}">Acesse a loja para saber mais.</a>
         <br /><br />
         <p>Atenciosamente,</p>
-        <p>Equipe - Loja TI</p>
+        <p>Equipe - Moda Brasil</p>
     `;
     _send({
-        subject: "Pedido Atualizado - Loja TI",
+        subject: "Pedido Atualizado - Moda Brasil",
         emails: usuario.email,
         message
     });
