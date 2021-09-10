@@ -12,7 +12,7 @@ const _criarPagamentoComBoleto = (senderHash, { cliente, carrinho, entrega, paga
             cpf_cnpj: cliente.cpf.replace(/[-\.]/g, ""),
             area_code: cliente.telefones[0].slice(0,2),
             phone: cliente.telefones[0].slice(2).trim().split(" ").join(""),
-            birth_date: cliente.dataDeNascimento // formato DD/MM/YYYY
+            birth_date: cliente.dataDeNascimento 
         });
 
         pag.setShipping({
@@ -22,7 +22,7 @@ const _criarPagamentoComBoleto = (senderHash, { cliente, carrinho, entrega, paga
             city: entrega.endereco.cidade,
             state: entrega.endereco.estado,
             postal_code: entrega.endereco.CEP.replace(/-/g,""),
-            same_for_billing: pagamento.enderecoEntregaIgualCobranca // true ou false
+            same_for_billing: pagamento.enderecoEntregaIgualCobranca 
         });
 
         pag.setBilling({
@@ -111,12 +111,13 @@ const _criarPagamentoComCartao = (senderHash, { cliente, carrinho, entrega, paga
             cpf_cnpj: ( pagamento.cartao.cpf || cliente.cpf ).replace(/[-\.]/g, "")
         });
 
-        pag.sendTransaction({
-            method: "creditCard",
-            value: pagamento.valor % 2 !== 0 && pagamento.parcelas !== 1 ? pagamento.valor + 0.01 : pagamento.valor,
-            installments: pagamento.parcelas,
-            hash: senderHash,
-            credit_card_token: pagamento.cartao.credit_card_token
+        const _value = Number(((divisor === 0) ? pagamento.valor : pagamento.valor + ((pagamento.parcelas - divisor)/100)).toFixed(2));
+    pag.sendTransaction({
+          method: "creditCard",
+          value: _value,
+          installments: pagamento.parcelas,
+          hash: senderHash,
+          credit_card_token: pagamento.cartao.credit_card_token
         }, (err, data) => (err) ? rejeitar(err) : resolver(data) );
 
     });

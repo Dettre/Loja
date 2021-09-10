@@ -4,6 +4,6 @@ module.exports = {
     sandbox_email: process.env.NODE_ENV === 'production' ? null : 'c05061739674428184954@sandbox.pagseguro.com.br',
     email: 'odirlei21@hotmail.com',
     token: '32919D5A8B554755A366AB412DEFF706',
-    notificationURL: "https://api.loja-teste.ampliee.com/v1/api/pagamentos/notificacao",
+    notificationURL: "http://68.183.129.226:3000/v1/api/pagamentos/notificacao",
 
 }

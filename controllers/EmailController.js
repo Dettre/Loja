@@ -4,7 +4,7 @@ const moment = require("moment");
 
 const _send = ({ subject, emails, message }, cb = null) => {
     const mailOptions = { 
-        from: "dettredirley@gmail.com",
+        from: "noresponse@modabrasil.com",
         to: emails,
         subject,
         html: message
